@@ -10,7 +10,7 @@ st.set_page_config(
 )
 
 st.title("🎓 Student Performance Prediction System")
-st.write("Predict student performance using Machine Learning.")
+st.write("Predict student performance using Artificial Intelligence and Machine Learning.")
 st.divider()
 
 # Load student dataset
@@ -32,6 +32,28 @@ model = RandomForestRegressor(
     random_state=42
 )
 
+import numpy as np
+
+np.random.seed(42)
+n = 300
+low = pd.DataFrame({
+    "study_hours": np.random.uniform(0, 3, n),
+    "attendance": np.random.uniform(0, 50, n),
+    "previous_marks": np.random.uniform(0, 50, n),
+    "assignments": np.random.uniform(0, 50, n),
+    "sleep_hours": np.random.uniform(0, 10, n),
+    "participation_score": np.random.choice([0, 1], n),
+})
+low["performance_score"] = np.clip(
+    low["study_hours"] * 2
+    + low["attendance"] * 0.12
+    + low["previous_marks"] * 0.15
+    + low["assignments"] * 0.1
+    + np.random.normal(0, 2, n),
+    0, 100,
+)
+
+data = pd.concat([data, low], ignore_index=True)
 model.fit(data[features], data["performance_score"])
 
 st.header("📚 Enter Student Details")
@@ -88,12 +110,29 @@ if st.button(
         f"{prediction:.1f}%"
     )
 
-    if prediction >= 75:
-        st.success("Excellent performance!")
-    elif prediction >= 50:
-        st.info("Good progress! Keep improving.")
+    if prediction >= 90:
+        st.success("Outstanding predicted performance! Keep it up.")
+
+    elif prediction >= 75:
+        st.success("Excellent predicted performance. Continue your consistent efforts.")
+
+    elif prediction >= 60:
+        st.info("Good progress! Focus on improving weaker areas.")
+
+    elif prediction >= 45:
+        st.info("Moderate predicted performance. More consistent preparation may help.")
+
+    elif prediction >= 30:
+        st.warning("Below-average predicted performance. Focus on regular study and assignments.")
+
+    elif prediction >= 15:
+        st.warning("Low predicted performance. Strengthen your preparation and seek academic support.")
+
+    elif prediction >= 5:
+        st.error("Very low predicted performance. Significant improvement in study habits may help.")
+
     else:
-        st.warning("More preparation may help.")
+        st.error("Extremely low predicted performance. Additional academic support is recommended.")
 
 st.divider()
 st.caption(
