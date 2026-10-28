@@ -23,7 +23,6 @@ features = [
     "attendance",
     "previous_marks",
     "assignments",
-    "sleep_hours",
     "participation_score"
 ]
 
@@ -41,7 +40,6 @@ low = pd.DataFrame({
     "attendance": np.random.uniform(0, 50, n),
     "previous_marks": np.random.uniform(0, 50, n),
     "assignments": np.random.uniform(0, 50, n),
-    "sleep_hours": np.random.uniform(0, 10, n),
     "participation_score": np.random.choice([0, 1], n),
 })
 low["performance_score"] = np.clip(
@@ -75,9 +73,6 @@ with col2:
     assignments = st.slider(
         "Assignments Completed (%)", 0, 100, 80
     )
-    sleep_hours = st.slider(
-        "Daily Sleep Hours", 0.0, 12.0, 7.0, 0.5
-    )
     participation = st.selectbox(
         "Class Participation", ["Low", "Medium", "High"]
     )
@@ -97,12 +92,14 @@ if st.button(
         "attendance": attendance,
         "previous_marks": previous_marks,
         "assignments": assignments,
-        "sleep_hours": sleep_hours,
         "participation_score": participation_score
     }])
 
     prediction = model.predict(student[features])[0]
     prediction = max(0, min(100, prediction))
+    if (study_hours == 0 and attendance == 0 and previous_marks == 0
+        and assignments == 0 ):
+        prediction = 0.0
 
     st.subheader("📊 Prediction Result")
     st.metric(
