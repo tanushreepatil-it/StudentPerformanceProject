@@ -8,7 +8,6 @@ features = [
 "attendance",
 "previous_marks",
 "assignments",
-"sleep_hours",
 "participation_score"
 ]
 
@@ -24,7 +23,6 @@ student = pd.DataFrame([{
 "attendance": 0,
 "previous_marks": 0,
 "assignments": 0,
-"sleep_hours": 0,
 "participation_score": 0
 }])
 
